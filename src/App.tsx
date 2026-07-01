@@ -125,6 +125,7 @@ function App() {
       />
 
       <h1>Login</h1>
+      <br />
 
       <input
         type="email"
