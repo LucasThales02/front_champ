@@ -103,7 +103,7 @@ function App() {
   // ✅ LOGIN
   return (
     <div style={{ padding: 20 }}>
-      <h1>Login IPTV</h1>
+      <h1>ChampPlay | Login</h1>
 
       <input
         type="email"
