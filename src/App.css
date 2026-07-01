@@ -1,144 +1,174 @@
-/* RESET */
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+/* =======================
+   RESET
+================ border-box;======================= */
 }
 
 body {
+  background: #0b1020;
+  color: #fff;
   font-family: Arial, Helvetica, sans-serif;
-  background-color: #0f111a;
-  color: white;
 }
 
-/* LOGIN */
+/* =======================
+   LOGIN
+======================= */
 
 .login-container {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
-  gap: 10px;
+  align-items: center;
+  background: #0b1020;
 }
 
 .logo-login {
-  width: 480px;
+  width: 400px;
   max-width: 90%;
   height: auto;
-  margin-bottom: 20px;
-}
-
-.logo-menu {
-  width: 140px;
-  height: auto;
-  display: block;
-  margin: 0 auto 20px auto;
+  margin-bottom: 30px;
 }
 
 .login-container h1 {
-  margin-top: 10px;
-  margin-bottom: 30px;
-  font-size: 72px;
-  font-weight: 700;
-  line-height: 1.1;
+  font-size: 40px;
+  margin-bottom: 25px;
 }
 
 .login-container input {
-  width: 420px;
+  width: 400px;
   max-width: 90%;
-  padding: 14px 16px;
-  margin-bottom: 15px;
+  padding: 14px;
+  font-size: 16px;
   border-radius: 10px;
-  border: 1px solid #2f364d;
-  background: #1b2130;
+  border: 1px solid #2b3040;
+  background: #161c2d;
   color: white;
-  font-size: 18px;
+  margin-bottom: 15px;
+}
+
+.login-container input:focus {
+  outline: none;
+  border-color: #0094ff;
 }
 
 .login-container button {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 6px;
+  margin-top: 10px;
+}
+
+/* =======================
+   BOTÕES
+======================= */
+
+.btn {
   background: #0094ff;
   color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 10px;
   cursor: pointer;
+  font-size: 16px;
 }
 
-.login-container button:hover {
-  background: #0077cc;
+.btn:hover {
+  background: #0078cf;
 }
 
-/* MENU */
+/* =======================
+   SIDEBAR
+======================= */
 
 .sidebar {
-  width: 220px;
-  background: #161923;
-  color: white;
+  width: 270px;
+  background: #131827;
+  border-right: 1px solid #23283a;
+  min-height: 100vh;
   padding: 20px;
 }
 
 .logo-menu {
-  width: 140px;
+  width: 190px;
   height: auto;
   display: block;
-  margin: 0 auto 20px auto;
+  margin: 10px auto 30px auto;
 }
 
 .sidebar p {
   cursor: pointer;
-  margin-bottom: 15px;
+  padding: 12px;
+  margin-bottom: 8px;
+  border-radius: 8px;
   transition: 0.2s;
+  font-size: 20px;
 }
 
 .sidebar p:hover {
+  background: #1d2538;
   color: #00b7ff;
 }
 
-/* CONEXÕES */
+/* =======================
+   CONTEÚDO
+======================= */
+
+.main-content {
+  flex: 1;
+  padding: 25px;
+}
+
+.page-title {
+  text-align: center;
+  margin-bottom: 25px;
+  font-size: 42px;
+  color: white;
+}
+
+/* =======================
+   CONEXÕES
+======================= */
 
 .conexao-card {
-  border: 1px solid #2b3040;
-  border-radius: 10px;
-  background: #1a1f2b;
-  padding: 15px;
-  margin-bottom: 12px;
-  color: white;
+  background: #151b2e;
+  border: 1px solid #293149;
+  border-radius: 14px;
+  padding: 20px;
+  margin-bottom: 15px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  transition: 0.2s;
+}
+
+.conexao-card:hover {
+  border-color: #0094ff;
+  transform: translateY(-2px);
 }
 
 .conexao-card strong {
   display: block;
-  font-size: 18px;
-  margin-bottom: 8px;
+  font-size: 22px;
+  color: white;
+  margin-bottom: 10px;
+}
+
+.conexao-info {
+  color: #cbd5e1;
+  line-height: 1.8;
 }
 
 .online {
-  color: #00ff6e;
+  color: #22c55e;
   font-weight: bold;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
 }
 
-/* BOTÕES */
-
-.btn {
-  padding: 10px 18px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  background: #0094ff;
-  color: white;
-}
-
-.btn:hover {
-  opacity: 0.9;
-}
-
-/* LOGO GENÉRICA */
+/* =======================
+   LOGO GENÉRICA
+======================= */
 
 .logo {
-  width: 250px;
-  max-width: 100%;
+  width: 320px;
+  max-width: 90%;
   height: auto;
-  display: block;
 }
+
+* {
+  margin: 0;
+  padding: 0;
