@@ -3,12 +3,13 @@ import { supabase } from './supabaseClient';
 import Clientes from './Clientes';
 import Teste from './Teste';
 import Conexoes from './Conexoes';
+import './App.css';
 
 function App() {
   const [usuario, setUsuario] = useState<any>(null);
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
-  const [pagina, setPagina] = useState('dashboard');
+  const [pagina, setPagina] = useState('conexoes');
   const [menuAberto, setMenuAberto] = useState(true);
 
   useEffect(() => {
@@ -26,8 +27,11 @@ function App() {
       password: senha,
     });
 
-    if (!error) verificarSessao();
-    else alert('Erro no login');
+    if (!error) {
+      verificarSessao();
+    } else {
+      alert('Email ou senha inválidos');
+    }
   }
 
   async function logout() {
@@ -35,63 +39,72 @@ function App() {
     setUsuario(null);
   }
 
-  // ✅ TELAS (AGORA LIMPO E CORRETO)
   function renderConteudo() {
-    if (pagina === 'dashboard') return <h2>Dashboard</h2>;
-    if (pagina === 'clientes') return <Clientes />;
-    if (pagina === 'conexoes') return <Conexoes />;
-    if (pagina === 'teste') return <Teste />;
-    if (pagina === 'revendedores') return <h2>Revendedores</h2>;
-    if (pagina === 'config') return <h2>Configurações</h2>;
+    switch (pagina) {
+      case 'clientes':
+        return <Clientes />;
+
+      case 'conexoes':
+        return <Conexoes />;
+
+      case 'teste':
+        return <Teste />;
+
+      default:
+        return <Conexoes />;
+    }
   }
 
-  // ✅ DASHBOARD
+  // ==========================
+  // PAINEL LOGADO
+  // ==========================
   if (usuario) {
     return (
-      <div style={{ display: 'flex', height: '100vh' }}>
+      <div style={{ display: 'flex', minHeight: '100vh' }}>
         <button
           onClick={() => setMenuAberto(!menuAberto)}
           style={{
-            position: 'absolute',
-            top: 8,
-            left: 8,
-            zIndex: 1000,
+            position: 'fixed',
+            top: 10,
+            left: 10,
+            zIndex: 9999,
           }}
         >
           ☰
         </button>
 
         {menuAberto && (
-          <aside
-            style={{
-              width: 150,
-              background: '#1e1e2f',
-              color: 'white',
-              padding: 20,
-              minHeight: '200vh',
-            }}
-          >
-            <h2
-              style={{ color: 'white', marginBottom: 30, textAlign: 'center' }}
-            >
-              Champ Play
-            </h2>
+          <aside className="sidebar">
+            <img
+              src="/logo.png"
+              alt="ChampPlay"
+              className="logo-menu"
+            />
 
-            <p onClick={() => setPagina('conexoes')}>Conexões ativas</p>
-            <p onClick={() => setPagina('teste')}>Criar teste</p>
-            <p onClick={() => setPagina('clientes')}>Clientes</p>
+            <p onClick={() => setPagina('conexoes')}>
+              📡 Conexões Ativas
+            </p>
 
-            <hr />
+            <p onClick={() => setPagina('clientes')}>
+              👤 Clientes
+            </p>
 
-            <button onClick={logout}>Sair</button>
+            <p onClick={() => setPagina('teste')}>
+              🧪 Criar Teste
+            </p>
+
+            <hr style={{ margin: '20px 0' }} />
+
+            <button className="btn" onClick={logout}>
+              Sair
+            </button>
           </aside>
         )}
 
         <main
           style={{
             flex: 1,
-            padding: 20,
-            marginLeft: menuAberto ? 0 : 0,
+            padding: '20px',
           }}
         >
           {renderConteudo()}
@@ -100,15 +113,17 @@ function App() {
     );
   }
 
-  // ✅ LOGIN
+  // ==========================
+  // LOGIN
+  // ==========================
   return (
     <div className="login-container">
       <img
         src="/logo.png"
         alt="ChampPlay"
-        className="logo"
+        className="logo-login"
       />
-      <br />
+
       <h1>Login</h1>
 
       <input
@@ -118,9 +133,6 @@ function App() {
         onChange={(e) => setEmail(e.target.value)}
       />
 
-      <br />
-      <br />
-
       <input
         type="password"
         placeholder="Senha"
@@ -128,10 +140,9 @@ function App() {
         onChange={(e) => setSenha(e.target.value)}
       />
 
-      <br />
-      <br />
-
-      <button onClick={login}>Entrar</button>
+      <button className="btn" onClick={login}>
+        Entrar
+      </button>
     </div>
   );
 }
