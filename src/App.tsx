@@ -103,9 +103,9 @@ function App() {
   // ✅ LOGIN
   return (
     <div style={{ padding: 20 }}>
-      <h1>ChampPlay</h1>
+      <img src="/logo.png" alt="ChampPlay" />
       <br />
-      <h2>Login</h2>
+      <h1>Login</h1>
 
       <input
         type="email"
