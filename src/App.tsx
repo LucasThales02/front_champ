@@ -103,7 +103,11 @@ function App() {
   // ✅ LOGIN
   return (
     <div style={{ padding: 20 }}>
-      <img src="/logo.png" alt="ChampPlay" />
+      <img
+        src="/champplay-logo.png"
+        alt="ChampPlay"
+        className="logo"
+      />
       <br />
       <h1>Login</h1>
 
