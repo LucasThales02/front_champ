@@ -102,9 +102,9 @@ function App() {
 
   // ✅ LOGIN
   return (
-    <div style={{ padding: 20 }}>
+    <div className="login-container">
       <img
-        src="/champplay-logo.png"
+        src="/logo.png"
         alt="ChampPlay"
         className="logo"
       />
