@@ -26,7 +26,14 @@ body {
   width: 320px;
   max-width: 90%;
   height: auto;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
+}
+
+.logo-menu {
+  width: 140px;
+  height: auto;
+  display: block;
+  margin: 0 auto 20px auto;
 }
 
 .login-container h1 {
