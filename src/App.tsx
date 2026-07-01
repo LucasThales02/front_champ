@@ -103,7 +103,9 @@ function App() {
   // ✅ LOGIN
   return (
     <div style={{ padding: 20 }}>
-      <h1>ChampPlay | Login</h1>
+      <h1>ChampPlay</h1>
+      <br />
+      <h2>Login</h2>
 
       <input
         type="email"
