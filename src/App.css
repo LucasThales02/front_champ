@@ -20,10 +20,11 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 10px;
 }
 
 .logo-login {
-  width: 320px;
+  width: 480px;
   max-width: 90%;
   height: auto;
   margin-bottom: 20px;
@@ -37,17 +38,23 @@ body {
 }
 
 .login-container h1 {
-  margin-bottom: 20px;
+  margin-top: 10px;
+  margin-bottom: 30px;
+  font-size: 72px;
+  font-weight: 700;
+  line-height: 1.1;
 }
 
 .login-container input {
-  width: 280px;
-  padding: 10px;
-  margin-bottom: 10px;
-  border: 1px solid #333;
-  border-radius: 6px;
-  background: #1b1f2a;
+  width: 420px;
+  max-width: 90%;
+  padding: 14px 16px;
+  margin-bottom: 15px;
+  border-radius: 10px;
+  border: 1px solid #2f364d;
+  background: #1b2130;
   color: white;
+  font-size: 18px;
 }
 
 .login-container button {
