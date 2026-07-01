@@ -119,7 +119,7 @@ function App() {
   return (
     <div className="login-container">
       <img
-        src="/logo.png"
+        src="/ogo.png"
         alt="ChampPlay"
         className="logo-login"
       />
