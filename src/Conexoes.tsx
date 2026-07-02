@@ -7,7 +7,6 @@ export default function Conexoes() {
   useEffect(() => {
     carregarConexoes();
 
-    // ✅ auto atualização a cada 5 segundos
     const interval = setInterval(() => {
       carregarConexoes();
     }, 5000);
@@ -23,42 +22,89 @@ export default function Conexoes() {
       .order('inicio', { ascending: false });
 
     if (error) {
-      console.log('ERRO:', error);
-    } else {
-      console.log(data); // 👉 ajuda a confirmar se veio o email
-      setConexoes(data || []);
+      console.error(error);
+      return;
     }
+
+    setConexoes(data || []);
   }
 
   return (
-    <div>
-      <h2>Conexões Ativas</h2>
+    <>
+      <div className="page-heading">
+        <div className="page-heading-copy">
+          <span className="page-icon">
+            <i className="bi bi-broadcast"></i>
+          </span>
 
-      {conexoes.length === 0 && <p>Nenhuma conexão ativa</p>}
+          <div>
+            <p className="eyebrow mb-1">Monitoramento</p>
 
-      {conexoes.map((c) => (
-        <div
-          key={c.cliente_id}
-          style={{
-            border: '1px solid #ccc',
-            padding: 10,
-            marginBottom: 10,
-            borderRadius: 8,
-            background: '#f9f9f9',
-          }}
-        >
-          <strong>{c.nome_cliente}</strong>
-          <br />
-          E-mail: {c.email_cliente}
-          <br />
-          IP: {c.ip}
-          <br />
-          Início:{' '}
-          {new Date(c.inicio).toLocaleString('pt-BR', {
-            timeZone: 'America/Sao_Paulo',
-          })}
+            <h1 className="h3 mb-1">Conexões Ativas</h1>
+
+            <p className="text-muted mb-0">
+              Clientes conectados neste momento.
+            </p>
+          </div>
         </div>
-      ))}
-    </div>
+      </div>
+
+      <div className="row g-3">
+        {conexoes.length === 0 && (
+          <div className="col-12">
+            <div className="panel text-center py-5">
+              <i className="bi bi-wifi-off fs-1 text-muted"></i>
+
+              <h5 className="mt-3">Nenhuma conexão ativa</h5>
+            </div>
+          </div>
+        )}
+
+        {conexoes.map((c) => (
+          <div key={c.cliente_id} className="col-12 col-md-6 col-xl-4">
+            <div className="metric-card metric-primary">
+              <div className="metric-top">
+                <span className="metric-label">ONLINE</span>
+
+                <span className="metric-icon">
+                  <i className="bi bi-broadcast"></i>
+                </span>
+              </div>
+
+              <div
+                style={{
+                  fontSize: '1.3rem',
+                  fontWeight: 700,
+                  marginTop: '15px',
+                }}
+              >
+                {c.nome_cliente}
+              </div>
+
+              <div className="metric-meta">
+                <span>
+                  <strong>E-mail:</strong> {c.email_cliente}
+                </span>
+              </div>
+
+              <div className="metric-meta">
+                <span>
+                  <strong>IP:</strong> {c.ip}
+                </span>
+              </div>
+
+              <div className="metric-meta">
+                <span>
+                  <strong>Início:</strong>{' '}
+                  {new Date(c.inicio).toLocaleString('pt-BR', {
+                    timeZone: 'America/Sao_Paulo',
+                  })}
+                </span>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </>
   );
 }
