@@ -119,7 +119,7 @@ function App() {
         <div className="auth-card">
           <div className="text-center mb-4">
             <img
-              src="/logo.png"
+              src="/assets/images/brand/logo/logo.png"
               alt="ChampPlay"
               style={{
                 width: '280px',
@@ -171,7 +171,7 @@ function App() {
           >
             <span className="brand-copy">
               <img
-                src="/logo.png"
+                src="/assets/images/brand/logo/logo.png"
                 alt="ChampPlay"
                 style={{
                   width: '180px',
