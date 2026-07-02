@@ -3,21 +3,38 @@ import { supabase } from './supabaseClient';
 import Clientes from './Clientes';
 import Teste from './Teste';
 import Conexoes from './Conexoes';
-import './App.css';
 
 function App() {
   const [usuario, setUsuario] = useState<any>(null);
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [pagina, setPagina] = useState('conexoes');
-  const [menuAberto, setMenuAberto] = useState(true);
+  const [tema, setTema] = useState('light');
 
   useEffect(() => {
     verificarSessao();
+
+    return () => {
+      document.body.classList.remove('sidebar-mini');
+      document.body.classList.remove('sidebar-open');
+    };
+  }, []);
+
+  useEffect(() => {
+    const temaSalvo = localStorage.getItem('adminHMD.colorTheme');
+
+    const temaInicial = temaSalvo === 'dark' ? 'dark' : 'light';
+
+    setTema(temaInicial);
+
+    document.documentElement.setAttribute('data-theme', temaInicial);
+
+    document.documentElement.setAttribute('data-bs-theme', temaInicial);
   }, []);
 
   async function verificarSessao() {
     const { data } = await supabase.auth.getSession();
+
     setUsuario(data.session?.user ?? null);
   }
 
@@ -27,11 +44,12 @@ function App() {
       password: senha,
     });
 
-    if (!error) {
-      verificarSessao();
-    } else {
+    if (error) {
       alert('Email ou senha inválidos');
+      return;
     }
+
+    verificarSessao();
   }
 
   async function logout() {
@@ -39,111 +57,234 @@ function App() {
     setUsuario(null);
   }
 
+  function toggleSidebar() {
+    if (window.innerWidth >= 992) {
+      document.body.classList.toggle('sidebar-mini');
+    } else {
+      document.body.classList.toggle('sidebar-open');
+    }
+  }
+
+  function fecharSidebarMobile() {
+    document.body.classList.remove('sidebar-open');
+  }
+
+  function alternarTema() {
+    const novoTema = tema === 'dark' ? 'light' : 'dark';
+
+    setTema(novoTema);
+
+    document.documentElement.setAttribute('data-theme', novoTema);
+
+    document.documentElement.setAttribute('data-bs-theme', novoTema);
+
+    localStorage.setItem('adminHMD.colorTheme', novoTema);
+  }
+
   function renderConteudo() {
     switch (pagina) {
       case 'clientes':
         return <Clientes />;
 
-      case 'conexoes':
-        return <Conexoes />;
-
       case 'teste':
         return <Teste />;
+
+      case 'conexoes':
+        return <Conexoes />;
 
       default:
         return <Conexoes />;
     }
   }
 
-  // ==========================
-  // PAINEL LOGADO
-  // ==========================
-  if (usuario) {
-    return (
-      <div style={{ display: 'flex', minHeight: '100vh' }}>
-        <button
-          onClick={() => setMenuAberto(!menuAberto)}
-          style={{
-            position: 'fixed',
-            top: 10,
-            left: 10,
-            zIndex: 9999,
-          }}
-        >
-          ☰
-        </button>
+  // ====================
+  // LOGIN
+  // ====================
 
-        {menuAberto && (
-          <aside className="sidebar">
+  if (!usuario) {
+    return (
+      <div className="auth-page">
+        <div className="navbar-actions ms-auto">
+          <button
+            className="icon-button theme-toggle"
+            type="button"
+            onClick={alternarTema}
+            title="Alterar tema"
+          >
+            <i
+              className={tema === 'dark' ? 'bi bi-sun' : 'bi bi-moon-stars'}
+            ></i>
+          </button>
+        </div>
+        <div className="auth-card">
+          <div className="text-center mb-4">
             <img
               src="/logo.png"
               alt="ChampPlay"
-              className="logo-menu"
+              style={{
+                width: '280px',
+                maxWidth: '100%',
+              }}
             />
+          </div>
 
-            <p onClick={() => setPagina('conexoes')}>
-              📡 Conexões Ativas
-            </p>
+          <h2 className="text-center mb-4">Login</h2>
 
-            <p onClick={() => setPagina('clientes')}>
-              👤 Clientes
-            </p>
+          <input
+            type="email"
+            className="form-control mb-3"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
 
-            <p onClick={() => setPagina('teste')}>
-              🧪 Criar Teste
-            </p>
+          <input
+            type="password"
+            className="form-control mb-4"
+            placeholder="Senha"
+            value={senha}
+            onChange={(e) => setSenha(e.target.value)}
+          />
 
-            <hr style={{ margin: '20px 0' }} />
-
-            <button className="btn" onClick={logout}>
-              Sair
-            </button>
-          </aside>
-        )}
-
-        <main
-          style={{
-            flex: 1,
-            padding: '20px',
-          }}
-        >
-          {renderConteudo()}
-        </main>
+          <button className="btn btn-primary w-100" onClick={login}>
+            Entrar
+          </button>
+        </div>
       </div>
     );
   }
 
-  // ==========================
-  // LOGIN
-  // ==========================
+  // ====================
+  // PAINEL
+  // ====================
+
   return (
-    <div className="login-container">
-      <img
-        src="/ogo.png"
-        alt="ChampPlay"
-        className="logo-login"
-      />
+    <div className="admin-shell">
+      <div className="sidebar-backdrop" onClick={fecharSidebarMobile}></div>
 
-      <h1>Login</h1>
-      <br />
+      <aside className="admin-sidebar" id="adminSidebar">
+        <div className="sidebar-header">
+          <a
+            href="#"
+            className="brand-mark"
+            onClick={(e) => e.preventDefault()}
+          >
+            <span className="brand-copy">
+              <img
+                src="/logo.png"
+                alt="ChampPlay"
+                style={{
+                  width: '180px',
+                  display: 'block',
+                  margin: '0 auto',
+                }}
+              />
+            </span>
+          </a>
+        </div>
 
-      <input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
+        <nav className="sidebar-nav">
+          <a
+            href="#"
+            className={`nav-link ${pagina === 'conexoes' ? 'active' : ''}`}
+            onClick={(e) => {
+              e.preventDefault();
+              setPagina('conexoes');
+              fecharSidebarMobile();
+            }}
+          >
+            <span className="nav-icon">
+              <i className="bi bi-broadcast"></i>
+            </span>
 
-      <input
-        type="password"
-        placeholder="Senha"
-        value={senha}
-        onChange={(e) => setSenha(e.target.value)}
-      />
+            <span className="nav-text">Conexões</span>
+          </a>
 
-      <button className="btn" onClick={login}>
-        Entrar
-      </button>
+          <a
+            href="#"
+            className={`nav-link ${pagina === 'clientes' ? 'active' : ''}`}
+            onClick={(e) => {
+              e.preventDefault();
+              setPagina('clientes');
+              fecharSidebarMobile();
+            }}
+          >
+            <span className="nav-icon">
+              <i className="bi bi-people"></i>
+            </span>
+
+            <span className="nav-text">Clientes</span>
+          </a>
+
+          <a
+            href="#"
+            className={`nav-link ${pagina === 'teste' ? 'active' : ''}`}
+            onClick={(e) => {
+              e.preventDefault();
+              setPagina('teste');
+              fecharSidebarMobile();
+            }}
+          >
+            <span className="nav-icon">
+              <i className="bi bi-person-plus"></i>
+            </span>
+
+            <span className="nav-text">Criar Teste</span>
+          </a>
+        </nav>
+
+        <div className="sidebar-user">
+          <strong>{usuario.email}</strong>
+          <small>Administrador</small>
+        </div>
+
+        <div className="sidebar-footer">
+          <button className="btn btn-primary w-100" onClick={logout}>
+            Sair
+          </button>
+        </div>
+      </aside>
+
+      <div className="admin-main">
+        <nav className="navbar admin-navbar navbar-expand bg-white">
+          <div className="container-fluid px-3 px-lg-4">
+            <button
+              className="sidebar-toggle"
+              type="button"
+              onClick={toggleSidebar}
+            >
+              <span></span>
+              <span></span>
+              <span></span>
+            </button>
+
+            <div className="ms-3">
+              <h5 className="mb-0 fw-bold">ChampPlay</h5>
+            </div>
+
+            <div className="navbar-actions ms-auto">
+              <button
+                className="icon-button theme-toggle"
+                type="button"
+                onClick={alternarTema}
+                title="Alterar tema"
+              >
+                <i
+                  className={tema === 'dark' ? 'bi bi-sun' : 'bi bi-moon-stars'}
+                ></i>
+              </button>
+
+              <span className="ms-3">{usuario.email}</span>
+            </div>
+          </div>
+        </nav>
+
+        <main className="dashboard-content">
+          <div className="container-fluid px-3 px-lg-4 py-4">
+            {renderConteudo()}
+          </div>
+        </main>
+      </div>
     </div>
   );
 }
