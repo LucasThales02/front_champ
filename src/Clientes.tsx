@@ -156,130 +156,203 @@ export default function Clientes() {
       carregarClientes();
     }
   }
-
   return (
-    <div>
-      <h2>Clientes</h2>
+    <>
+      <div className="page-heading">
+        <div className="page-heading-copy">
+          <span className="page-icon">
+            <i className="bi bi-people"></i>
+          </span>
 
-      {/* FORM */}
-      <div
-        style={{
-          marginBottom: 20,
-          display: '-ms-flexbox',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-          gap: 10,
-          maxWidth: 800,
-        }}
-      >
-        <input
-          placeholder="Nome"
-          value={nome}
-          onChange={(e) => setNome(e.target.value)}
-        />
-        <br />
-        <input
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <br />
-        <input
-          type="password"
-          placeholder="Senha"
-          value={senha}
-          onChange={(e) => setSenha(e.target.value)}
-        />
-        <br />
-        <select
-          value={planoId}
-          onChange={(e) => setPlanoId(e.target.value)}
-          style={{
-            padding: 5,
-            margin: 5,
-          }}
-        >
-          <option value="">Selecione um plano</option>
-          {planos.map((p) => (
-            <option key={p.id} value={p.id}>
-              {p.nome}
-            </option>
-          ))}
-        </select>
-        <br />
-        <label>
-          Créditos:
-          <input
-            type="number"
-            min="1"
-            max="12"
-            value={quantidadeCreditos}
-            onChange={(e) => {
-              const valor = Number(e.target.value);
-              setQuantidadeCreditos(valor);
-              calcularExpiracao(valor);
-            }}
-            style={{ marginLeft: 10 }}
-          />
-        </label>
+          <div>
+            <p className="eyebrow mb-1">Clientes</p>
 
-        {dataCalculada && (
-          <p>Expiração: {new Date(dataCalculada).toLocaleDateString()}</p>
-        )}
-        <button onClick={adicionarCliente}>Adicionar</button>
+            <h1 className="h3 mb-1">Gerenciamento de Clientes</h1>
+
+            <p className="text-muted mb-0">
+              Cadastre, renove e gerencie seus clientes.
+            </p>
+          </div>
+        </div>
       </div>
 
-      <hr />
+      {/* CADASTRO */}
 
-      <input
-        placeholder="Pesquisar por email"
-        value={filtroEmail}
-        onChange={(e) => setFiltroEmail(e.target.value)}
-        style={{
-          width: '93%',
-          padding: 5,
-          marginBottom: 5,
-        }}
-      />
-      <br />
+      <div className="panel mb-4">
+        <div className="panel-header">
+          <h2 className="h5 mb-0 section-title">
+            <i className="bi bi-person-plus"></i>
+            <span>Novo Cliente</span>
+          </h2>
+        </div>
+
+        <div className="row g-3">
+          <div className="col-md-3">
+            <input
+              className="form-control"
+              placeholder="Nome"
+              value={nome}
+              onChange={(e) => setNome(e.target.value)}
+            />
+          </div>
+
+          <div className="col-md-3">
+            <input
+              className="form-control"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+
+          <div className="col-md-2">
+            <input
+              type="password"
+              className="form-control"
+              placeholder="Senha"
+              value={senha}
+              onChange={(e) => setSenha(e.target.value)}
+            />
+          </div>
+
+          <div className="col-md-2">
+            <select
+              className="form-select"
+              value={planoId}
+              onChange={(e) => setPlanoId(e.target.value)}
+            >
+              <option value="">Selecione o plano</option>
+
+              {planos.map((p) => (
+                <option key={p.id} value={p.id}>
+                  {p.nome}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="col-md-2">
+            <input
+              type="number"
+              min="1"
+              max="12"
+              className="form-control"
+              value={quantidadeCreditos}
+              onChange={(e) => {
+                const valor = Number(e.target.value);
+
+                setQuantidadeCreditos(valor);
+
+                calcularExpiracao(valor);
+              }}
+            />
+          </div>
+
+          <div className="col-12">
+            <small className="text-muted">
+              Expiração:{' '}
+              {dataCalculada
+                ? new Date(dataCalculada).toLocaleDateString()
+                : '-'}
+            </small>
+          </div>
+
+          <div className="col-12">
+            <button className="btn btn-primary" onClick={adicionarCliente}>
+              <i className="bi bi-plus-circle"></i> Adicionar Cliente
+            </button>
+          </div>
+        </div>
+      </div>
 
       {/* LISTA */}
-      {clientes
-        .filter((c) =>
-          c.email.toLowerCase().includes(filtroEmail.toLowerCase())
-        )
-        .map((c) => {
-          const hoje = new Date();
-          const vencido = c.data_expiracao && new Date(c.data_expiracao) < hoje;
 
-          return (
-            <div
-              key={c.id}
-              style={{
-                border: '1px solid #ccc',
-                padding: 10,
-                marginBottom: 10,
-                background: vencido ? '#ffe6e6' : '#fff',
-              }}
-            >
-              <strong>{c.nome}</strong>
-              <br />
-              Email: {c.email}
-              <br />
-              Status: {c.ativo ? 'Ativo ✅' : 'Inativo ❌'}
-              <br />
-              Expiração:{' '}
-              {c.data_expiracao
-                ? new Date(c.data_expiracao).toLocaleDateString()
-                : 'N/A'}
-              <br />
-              <br />
-              <button onClick={() => alterarStatus(c.id, c.ativo)}>
-                {c.ativo ? 'Desativar' : 'Ativar +30'}
-              </button>
-              <button onClick={() => adicionarCredito(c)}>+30 dias</button>
-            </div>
-          );
-        })}
-    </div>
+      <div className="panel">
+        <div className="panel-header">
+          <div>
+            <h2 className="h5 mb-1 section-title">
+              <i className="bi bi-table"></i>
+              <span>Clientes</span>
+            </h2>
+
+            <p className="text-muted mb-0">Lista completa de clientes.</p>
+          </div>
+
+          <input
+            className="form-control table-search"
+            placeholder="Pesquisar email..."
+            value={filtroEmail}
+            onChange={(e) => setFiltroEmail(e.target.value)}
+          />
+        </div>
+
+        <div className="table-responsive">
+          <table className="table align-middle">
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>Email</th>
+                <th>Status</th>
+                <th>Expiração</th>
+                <th className="text-end">Ações</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {clientes
+                .filter((c) =>
+                  c.email.toLowerCase().includes(filtroEmail.toLowerCase())
+                )
+                .map((c) => {
+                  const vencido =
+                    c.data_expiracao && new Date(c.data_expiracao) < new Date();
+
+                  return (
+                    <tr key={c.id} className={vencido ? 'table-danger' : ''}>
+                      <td>
+                        <strong>{c.nome}</strong>
+                      </td>
+
+                      <td>{c.email}</td>
+
+                      <td>
+                        {c.ativo ? (
+                          <span className="badge text-bg-success">Ativo</span>
+                        ) : (
+                          <span className="badge text-bg-danger">Inativo</span>
+                        )}
+                      </td>
+
+                      <td>
+                        {c.data_expiracao
+                          ? new Date(c.data_expiracao).toLocaleDateString()
+                          : '-'}
+                      </td>
+
+                      <td className="text-end">
+                        <div className="d-flex gap-2 justify-content-end">
+                          <button
+                            className="btn btn-sm btn-outline-secondary"
+                            onClick={() => alterarStatus(c.id, c.ativo)}
+                          >
+                            {c.ativo ? 'Desativar' : 'Ativar'}
+                          </button>
+
+                          <button
+                            className="btn btn-sm btn-primary"
+                            onClick={() => adicionarCredito(c)}
+                          >
+                            +30 dias
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </>
   );
 }
