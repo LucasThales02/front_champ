@@ -6,6 +6,7 @@ interface Cliente {
   nome: string;
   email: string;
   senha: string;
+  plano_id: string;
   ativo: boolean;
   data_expiracao?: string;
 }
@@ -21,6 +22,10 @@ export default function Clientes() {
   const [quantidadeCreditos, setQuantidadeCreditos] = useState(1);
   const [dataCalculada, setDataCalculada] = useState<string | null>(null);
 
+  const [clienteEditando, setClienteEditando] = useState<Cliente | null>(null);
+
+  const [novoPlanoSelecionado, setNovoPlanoSelecionado] = useState('');
+
   useEffect(() => {
     carregarClientes();
     carregarPlanos();
@@ -34,6 +39,11 @@ export default function Clientes() {
     novaData.setDate(hoje.getDate() + qtd * 30);
 
     setDataCalculada(novaData.toISOString());
+  }
+
+  function abrirAlteracaoPlano(cliente: Cliente) {
+    setClienteEditando(cliente);
+    setNovoPlanoSelecionado(cliente.plano_id);
   }
 
   async function copiarLista(cliente: Cliente) {
@@ -165,6 +175,29 @@ export default function Clientes() {
       carregarClientes();
     }
   }
+
+  async function salvarPlano() {
+    if (!clienteEditando) return;
+
+    const { error } = await supabase
+      .from('clientes')
+      .update({
+        plano_id: novoPlanoSelecionado,
+      })
+      .eq('id', clienteEditando.id);
+
+    if (error) {
+      alert(error.message);
+      return;
+    }
+
+    alert('✅ Plano atualizado');
+
+    setClienteEditando(null);
+
+    carregarClientes();
+  }
+
   return (
     <>
       <div className="page-heading">
@@ -351,6 +384,13 @@ export default function Clientes() {
                       <td className="text-end">
                         <div className="d-flex gap-2 justify-content-end">
                           <button
+                            className="btn btn-sm btn-warning"
+                            onClick={() => abrirAlteracaoPlano(c)}
+                          >
+                            <i className="bi bi-pencil-square"></i> Plano
+                          </button>
+
+                          <button
                             className="btn btn-sm btn-outline-secondary"
                             onClick={() => alterarStatus(c.id, c.ativo)}
                           >
@@ -372,6 +412,61 @@ export default function Clientes() {
           </table>
         </div>
       </div>
+      {clienteEditando && (
+        <div
+          className="modal fade show"
+          style={{
+            display: 'block',
+            backgroundColor: 'rgba(0,0,0,.5)',
+          }}
+        >
+          <div className="modal-dialog">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">Alterar Plano</h5>
+
+                <button
+                  type="button"
+                  className="btn-close"
+                  onClick={() => setClienteEditando(null)}
+                ></button>
+              </div>
+
+              <div className="modal-body">
+                <p>
+                  Cliente:
+                  <strong> {clienteEditando.nome}</strong>
+                </p>
+
+                <select
+                  className="form-select"
+                  value={novoPlanoSelecionado}
+                  onChange={(e) => setNovoPlanoSelecionado(e.target.value)}
+                >
+                  {planos.map((p) => (
+                    <option key={p.id} value={p.id}>
+                      {p.nome}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="modal-footer">
+                <button
+                  className="btn btn-secondary"
+                  onClick={() => setClienteEditando(null)}
+                >
+                  Cancelar
+                </button>
+
+                <button className="btn btn-primary" onClick={salvarPlano}>
+                  Salvar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }
