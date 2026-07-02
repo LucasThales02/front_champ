@@ -140,89 +140,165 @@ export default function Teste() {
   }
 
   return (
-    <div>
-      <h2>Teste</h2>
+    <>
+      <div className="page-heading">
+        <div className="page-heading-copy">
+          <span className="page-icon">
+            <i className="bi bi-person-plus"></i>
+          </span>
 
-      {/* FORM */}
-      <div style={{ marginBottom: 20 }}>
-        <input
-          placeholder="Nome"
-          value={nome}
-          onChange={(e) => setNome(e.target.value)}
-        />
+          <div>
+            <p className="eyebrow mb-1">Testes</p>
 
-        <input
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
+            <h1 className="h3 mb-1">Testes Gratuitos</h1>
 
-        <input
-          type="password"
-          placeholder="Senha"
-          value={senha}
-          onChange={(e) => setSenha(e.target.value)}
-        />
-
-        <select
-          value={planoId}
-          onChange={(e) => setPlanoId(e.target.value)}
-          style={{
-            padding: 5,
-            margin: 5,
-          }}
-        >
-          <option value="">Selecione um plano</option>
-
-          {planos.map((p) => (
-            <option key={p.id} value={p.id}>
-              {p.nome}
-            </option>
-          ))}
-        </select>
-
-        <button onClick={criarTeste}>Criar Teste (4h)</button>
+            <p className="text-muted mb-0">Gerencie usuários de avaliação.</p>
+          </div>
+        </div>
       </div>
 
-      <hr />
+      {/* NOVO TESTE */}
 
-      {/* LISTA */}
-      {testes.map((t) => {
-        const agora = new Date();
-        const vencido = t.data_expiracao && new Date(t.data_expiracao) < agora;
+      <div className="panel mb-4">
+        <div className="panel-header">
+          <h2 className="h5 mb-0 section-title">
+            <i className="bi bi-person-plus"></i>
+            <span>Criar Teste</span>
+          </h2>
+        </div>
 
-        return (
-          <div
-            key={t.id}
-            style={{
-              border: '1px solid #ccc',
-              padding: 10,
-              marginBottom: 10,
-              background: vencido ? '#ffe6e6' : '#fff',
-            }}
-          >
-            <strong>{t.nome}</strong>
-            <br />
-            Email: {t.email}
-            <br />
-            Status: {t.ativo ? 'Ativo ✅' : 'Inativo ❌'}
-            <br />
-            Expiração:{' '}
-            {t.data_expiracao
-              ? new Date(t.data_expiracao).toLocaleString()
-              : 'N/A'}
-            <br />
-            <br />
-            <button onClick={() => adicionar2Horas(t)}>+2 horas</button>
-            <button
-              onClick={() => excluirTeste(t.id)}
-              style={{ marginLeft: 10, background: 'red', color: 'white' }}
+        <div className="row g-3">
+          <div className="col-md-3">
+            <input
+              className="form-control"
+              placeholder="Nome"
+              value={nome}
+              onChange={(e) => setNome(e.target.value)}
+            />
+          </div>
+
+          <div className="col-md-3">
+            <input
+              className="form-control"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+
+          <div className="col-md-2">
+            <input
+              type="password"
+              className="form-control"
+              placeholder="Senha"
+              value={senha}
+              onChange={(e) => setSenha(e.target.value)}
+            />
+          </div>
+
+          <div className="col-md-2">
+            <select
+              className="form-select"
+              value={planoId}
+              onChange={(e) => setPlanoId(e.target.value)}
             >
-              Excluir
+              <option value="">Selecione o plano</option>
+
+              {planos.map((p) => (
+                <option key={p.id} value={p.id}>
+                  {p.nome}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="col-md-2">
+            <button className="btn btn-primary w-100" onClick={criarTeste}>
+              Criar Teste
             </button>
           </div>
-        );
-      })}
-    </div>
+        </div>
+      </div>
+
+      {/* LISTA */}
+
+      <div className="panel">
+        <div className="panel-header">
+          <div>
+            <h2 className="h5 mb-1 section-title">
+              <i className="bi bi-clock-history"></i>
+              <span>Testes Ativos</span>
+            </h2>
+
+            <p className="text-muted mb-0">
+              Controle dos usuários de avaliação.
+            </p>
+          </div>
+        </div>
+
+        <div className="table-responsive">
+          <table className="table align-middle">
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>Email</th>
+                <th>Status</th>
+                <th>Expiração</th>
+                <th className="text-end">Ações</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {testes.map((t) => {
+                const vencido =
+                  t.data_expiracao && new Date(t.data_expiracao) < new Date();
+
+                return (
+                  <tr key={t.id} className={vencido ? 'table-danger' : ''}>
+                    <td>
+                      <strong>{t.nome}</strong>
+                    </td>
+
+                    <td>{t.email}</td>
+
+                    <td>
+                      {t.ativo ? (
+                        <span className="badge text-bg-success">Ativo</span>
+                      ) : (
+                        <span className="badge text-bg-danger">Expirado</span>
+                      )}
+                    </td>
+
+                    <td>
+                      {t.data_expiracao
+                        ? new Date(t.data_expiracao).toLocaleString('pt-BR')
+                        : '-'}
+                    </td>
+
+                    <td className="text-end">
+                      <div className="d-flex gap-2 justify-content-end">
+                        <button
+                          className="btn btn-sm btn-primary"
+                          onClick={() => adicionar2Horas(t)}
+                        >
+                          +2 horas
+                        </button>
+
+                        <button
+                          className="btn btn-sm btn-danger"
+                          onClick={() => excluirTeste(t.id)}
+                        >
+                          Excluir
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </>
   );
 }
